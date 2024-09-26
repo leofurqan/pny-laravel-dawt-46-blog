@@ -11,6 +11,15 @@ Route::get('/contact', [WebsiteController::class, 'contact'])->name('website.con
 Route::get('/blogs', [WebsiteController::class, 'blogs'])->name('website.blogs');
 Route::get('/blogs/detail', [WebsiteController::class, 'detail'])->name('website.detail');
 
+
+Route::get('/login', [AuthController::class, 'login'])->name('login');
+
 //admin routes
-Route::get('/admin/login', [AuthController::class, 'login'])->name('admin.login');
-Route::get('/admin/dashboard', [AuthController::class, 'dashboard'])->name('admin.dashboard');
+Route::prefix('admin')->name('admin.')->group(function() {
+    Route::post('/authenticate',[AuthController::class, 'authenticate'])->name('authenticate');
+
+    Route::middleware('auth')->group(function() {
+        Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+    });
+});
+
